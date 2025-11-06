@@ -1,15 +1,15 @@
-import { COLORS } from '@/styles/variables';
-import React, { useEffect, useState } from 'react';
+import {COLORS} from '@/styles/variables';
+import React, {useEffect, useState} from 'react';
 import {styled, keyframes} from 'styled-components';
-import { CustomBtn } from '../Shared/CustomBtn';
-import { Btn1, Btn2, Btn2Style, Btn3 } from '@/styles/textTags';
+import {CustomBtn} from '../Shared/CustomBtn';
+import {Btn1, Btn2, Btn2Style, Btn3} from '@/styles/textTags';
 import QuestionsSvgSelector from './QuestionsSvgSelector';
 import Image from 'next/image';
 import frogImg from '@/assets/img/frog.png';
-import { useRouter } from 'next/router';
+import {useRouter} from 'next/router';
 import SvgSelector from '../Shared/SvgSelector';
 import Loader from '../Shared/Loader';
-import { addCompletedCourseSlug } from '@/features/localStorage';
+import {addCompletedCourseSlug} from '@/features/localStorage';
 import CrownSvgSelector from './CrownSvgSelector';
 
 interface EndPageProps {
@@ -17,7 +17,7 @@ interface EndPageProps {
   QuizFunc: any;
 }
 
-const EndPage = ({ QuizFunc }: EndPageProps) => {
+const EndPage = ({QuizFunc}: EndPageProps) => {
   const router = useRouter();
   const point_id = router.query.point_id;
   const section_slug = router.query.section_id;
@@ -26,35 +26,59 @@ const EndPage = ({ QuizFunc }: EndPageProps) => {
   const [achievement, setAchievement] = useState<boolean | null>(null);
 
   useEffect(() => {
+    //check
+    console.log('1. useEffect in end page')
+
     if (!point_id || !section_slug || !course_slug) return;
 
+    //check
+    console.log(
+      '2. end page after check:',
+      'point_id: ' + point_id,
+      'section_slug: ' + section_slug,
+      'course_slug: ' + course_slug,
+    )
+
     const fetchData = async () => {
+      //check
+      console.log('3. fetchData')
+
       const data = await QuizFunc.gameOver(section_slug, Number(point_id));
 
+      //check
+      console.log('3. fun QuizFunc.gameOver() was end')
+
       if (data?.is_completed_course) {
+        //check
+        console.log('4.1. if data?.is_completed_course:' + data?.is_completed_course)
         setAchievement(true);
         addCompletedCourseSlug(String(course_slug));
       } else {
+        //check
+        console.log('4.2. if data?.is_completed_course:' + data?.is_completed_course)
         setAchievement(false);
       }
     };
 
     fetchData();
+
+    //check
+    console.log('5. end func fetchData()')
   }, [point_id, section_slug, course_slug]);
 
   if (achievement === null) {
-    return <Loader />;
+    return <Loader/>;
   }
 
   return (
     <EndPageWr
-      >
+    >
       <button onClick={() => router.push(`/courses/${course_slug}/${section_slug}`)}>
-        <SvgSelector svg='close-btn' />
+        <SvgSelector svg='close-btn'/>
       </button>
       <EndPageContentBlock
-      data-aos="zoom-in-up"
-      data-aos-duration='300'
+        data-aos="zoom-in-up"
+        data-aos-duration='300'
       >
         <CrownBlock>
           <div>
@@ -71,32 +95,32 @@ const EndPage = ({ QuizFunc }: EndPageProps) => {
           </div>
 
           <ImageCon>
-              <CrownSvgSelector svg="base"
-              data-aos="zoom-in-up"
-              data-aos-duration='300'
-              />
-              <StarsCon>
-                <div
+            <CrownSvgSelector svg="base"
+                              data-aos="zoom-in-up"
+                              data-aos-duration='300'
+            />
+            <StarsCon>
+              <div
                 data-aos="zoom-in"
                 data-aos-duration='300'
                 data-aos-delay='300'
-                >
-                  <CrownSvgSelector svg="left-star" />
-                </div>
-                <div
+              >
+                <CrownSvgSelector svg="left-star"/>
+              </div>
+              <div
                 data-aos="zoom-in"
                 data-aos-duration='300'
                 data-aos-delay='400'>
-                  <CrownSvgSelector svg="center-star" />
-                </div>
-                <div
+                <CrownSvgSelector svg="center-star"/>
+              </div>
+              <div
                 data-aos="zoom-in"
                 data-aos-duration='300'
                 data-aos-delay='500'>
-                  <CrownSvgSelector svg="right-star" />
-                </div>
-              </StarsCon>
-              <CrownSvgSelector svg="shining" />
+                <CrownSvgSelector svg="right-star"/>
+              </div>
+            </StarsCon>
+            <CrownSvgSelector svg="shining"/>
           </ImageCon>
         </CrownBlock>
         <ExpBlock>
@@ -110,29 +134,29 @@ const EndPage = ({ QuizFunc }: EndPageProps) => {
             data-aos-duration='300'
             data-aos-delay='500'>
             <QuestionsSvgSelector
-            name={achievement ? 'stciker' : 'exp'} />
+              name={achievement ? 'stciker' : 'exp'}/>
             <span>{achievement ? '+1' : '+70'}</span>
           </PointRollBlock>
-        </ExpBlock>   
-        <CustomBtn 
-        data-aos="fade-up"
-        data-aos-duration='300'
-        data-aos-delay='500'
-        onClick={() => router.push(`/courses/${course_slug}/${section_slug}`)}>
+        </ExpBlock>
+        <CustomBtn
+          data-aos="fade-up"
+          data-aos-duration='300'
+          data-aos-delay='500'
+          onClick={() => router.push(`/courses/${course_slug}/${section_slug}`)}>
           Продолжить
         </CustomBtn>
         {achievement && (
           <CustomBtn orange onClick={() => router.push('/achievements')}
-          data-aos="fade-up"
-          data-aos-duration='300'
-          data-aos-delay='600'
+                     data-aos="fade-up"
+                     data-aos-duration='300'
+                     data-aos-delay='600'
           >
             Мой{'\u00A0'}чемодан
           </CustomBtn>
         )}
       </EndPageContentBlock>
       {!achievement && <MascotImg
-      src={frogImg.src} alt='Квакс' width={310} height={289} />}
+        src={frogImg.src} alt='Квакс' width={310} height={289}/>}
     </EndPageWr>
   );
 };
@@ -149,50 +173,50 @@ const slideUpShining = keyframes`
 `;
 
 const frogAppears = keyframes`
-   from {
+  from {
     transform: translate(-50%, 100%);
-   }
-   to {
-      transform: translate(-50%, 0);
-   }
+  }
+  to {
+    transform: translate(-50%, 0);
+  }
 `;
 
 const StarsCon = styled.div`
-    position: absolute;
-    width: 61.7vw;
-    height: 29.42vw;
-    top: -65%;
-    left: 19%;
-    z-index: 3;
+  position: absolute;
+  width: 61.7vw;
+  height: 29.42vw;
+  top: -65%;
+  left: 19%;
+  z-index: 3;
 
-    display: flex;
-    flex-direction: row;
-    align-items: flex-end;
-    justify-content: center;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
+  justify-content: center;
 
-    >div {
-      &:first-of-type {
-        width: 22vw;
-        height: 22vw;
-        margin-right: -5vw;
-      }
-
-      &:nth-of-type(2) {
-        width: 29vw;
-        height: 29vw;
-      }
-
-      &:last-of-type {
-        width: 22vw;
-        height: 22vw;
-        margin-left: -5vw;
-      }
-
-      >svg {
-        width: 100%;
-        height: 100%;
-      }
+  > div {
+    &:first-of-type {
+      width: 22vw;
+      height: 22vw;
+      margin-right: -5vw;
     }
+
+    &:nth-of-type(2) {
+      width: 29vw;
+      height: 29vw;
+    }
+
+    &:last-of-type {
+      width: 22vw;
+      height: 22vw;
+      margin-left: -5vw;
+    }
+
+    > svg {
+      width: 100%;
+      height: 100%;
+    }
+  }
 
 `;
 
@@ -214,42 +238,43 @@ const EndPageWr = styled.div`
 `;
 
 const ImageCon = styled.div`
-position: relative;
-width: 97.7vw;
-height: 30.8vw;
->svg {
-  position: absolute;
+  position: relative;
+  width: 97.7vw;
+  height: 30.8vw;
 
-  &:first-of-type {
-    width: 100%;
-    height: 100%;
-    z-index: 2;
-    top: 0;
-    left: 0;
-  }
+  > svg {
+    position: absolute;
 
-  &:last-of-type {
-    width: 97.7vw;
-    height: 50vw;
-    transform: translateX(-50%);
-    top: -100%;
-    left: 50%;
-    z-index: 1;
-    animation: ${slideUpShining} 0.6s ease-out 0.3s backwards;
+    &:first-of-type {
+      width: 100%;
+      height: 100%;
+      z-index: 2;
+      top: 0;
+      left: 0;
+    }
+
+    &:last-of-type {
+      width: 97.7vw;
+      height: 50vw;
+      transform: translateX(-50%);
+      top: -100%;
+      left: 50%;
+      z-index: 1;
+      animation: ${slideUpShining} 0.6s ease-out 0.3s backwards;
+    }
   }
-}
 `;
 
 const CrownBlock = styled.div`
-position: absolute;
-transform: translate(-50%, 0%);
-top: -10%;
-left: 50%;
+  position: absolute;
+  transform: translate(-50%, 0%);
+  top: -10%;
+  left: 50%;
 
 `;
 
 const Title = styled(Btn1)`
-color: ${COLORS.white};
+  color: ${COLORS.white};
   position: absolute;
   z-index: 4;
   font-size: 6.86vw;
@@ -260,7 +285,7 @@ color: ${COLORS.white};
 `;
 
 const Level = styled(Btn3)`
-color: ${COLORS.white};
+  color: ${COLORS.white};
   position: absolute;
   z-index: 4;
   font-size: 4.57vw;
@@ -304,6 +329,7 @@ const PointRollBlock = styled.div`
   justify-content: center;
   align-items: center;
   gap: 4vw;
+
   span {
     ${Btn2Style};
     font-size: 9.14vw;

@@ -67,7 +67,7 @@ export default function App({ Component, pageProps }: AppProps) {
   });
 
   useSukaOdinRaz(() => {
-    tgInit(false);
+    tgInit(true);
   }, []);
 
   useEffect(() => {

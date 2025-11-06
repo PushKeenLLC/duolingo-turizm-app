@@ -30,6 +30,8 @@ export const useQuizFunctions = ({ initialQuestions }: any) => {
   const { userId } = useTgApp();
 
   const gameOver = async (section_slug: string, point: number) => {
+    //check
+    console.log('6. gameOver()')
     return await putPoint(section_slug, point, userId);
   };
 

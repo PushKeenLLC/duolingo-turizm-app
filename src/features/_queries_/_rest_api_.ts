@@ -1,7 +1,7 @@
-import { useEffect, useState } from 'react';
+import {useEffect, useState} from 'react';
 import axios from 'axios';
-import { BASE_URL, CONFIG } from './config';
-import { Course, IAchievement, IAchievements, Point, PointsData, Section } from '@/interfaces';
+import {BASE_URL, CONFIG} from './config';
+import {Course, IAchievement, IAchievements, Point, PointsData, Section} from '@/interfaces';
 import useTgApp from '@/features/_tg_methods_';
 
 export const useGetQuery = (endPoint: string) => {
@@ -85,7 +85,7 @@ export const useGetSectionsByCourseSlug = (slug: string | string[] | undefined) 
     error: null,
   });
 
-  const { userId } = useTgApp();
+  const {userId} = useTgApp();
 
   useEffect(() => {
     const fetchSections = async () => {
@@ -212,7 +212,7 @@ export const useGetUser = () => {
     error: null,
   });
 
-  const { userId } = useTgApp();
+  const {userId} = useTgApp();
 
   useEffect(() => {
     const fetchArtistsList = async () => {
@@ -268,10 +268,19 @@ export const CreateUser = async (petName: string, userId: number, tgName: string
 let isPostingProgress = false;
 
 export const putPoint = async (section_slug: string, point: number, userId: any) => {
+  //check
+  console.log(
+    '-putPoint 1. start putPoint ',
+    'section_slug: ' + section_slug,
+    'point: ' + point,
+    'userId: ' + userId,
+  )
   if (point === 1 && isPostingProgress) return; // блокируем повторный POST
-
+  //check
+  console.log('-putPoint 1. check (point === 1 && isPostingProgress)')
   if (point === 1) isPostingProgress = true;
-
+  //check
+  console.log('-putPoint 2. check (point === 1)')
   const data = {
     user_id: userId,
     section_slug: section_slug,
@@ -286,6 +295,8 @@ export const putPoint = async (section_slug: string, point: number, userId: any)
   const METHOD: string = point == '1' ? 'POST' : 'PUT';
 
   try {
+    //check
+    console.log('-putPoint 3. start response', 'METHOD: '+ METHOD)
     const response = await fetch(BASE_URL + 'progress', {
       method: METHOD,
       headers: {
@@ -293,6 +304,9 @@ export const putPoint = async (section_slug: string, point: number, userId: any)
       },
       body: JSON.stringify(data),
     });
+    //check
+    console.log('-putPoint 4. end response:' + response)
+    console.log('-putPoint 5. start response2')
 
     const response2 = await fetch(BASE_URL + 'users' + '?tg_id=' + userId, {
       method: 'PUT',
@@ -301,8 +315,12 @@ export const putPoint = async (section_slug: string, point: number, userId: any)
       },
       body: JSON.stringify(put_xp),
     });
+    //check
+    console.log('-putPoint 6. end response2:' + response2)
 
     if (response.ok && response2.ok) {
+      //check
+      console.log('-putPoint 7. check' + 'response.ok: ' + response.ok + 'response2.ok:' + response2.ok)
       const jsonData = await response.json();
       return jsonData;
     } else {
@@ -330,7 +348,7 @@ export const useGetAchievements = () => {
     error: null,
   });
 
-  const { userId } = useTgApp();
+  const {userId} = useTgApp();
 
   useEffect(() => {
     const fetchUserPoints = async () => {
