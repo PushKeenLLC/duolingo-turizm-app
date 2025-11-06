@@ -1,7 +1,22 @@
 services:
-  axentra:
-    image: pushkeen/duolingo-app:latest
+  duolingo-app:
+    image: pushkeen/duolingo-app:dev
     container_name: duolingo-app
     restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 256M
     ports:
       - 1928:3000
+    networks:
+      - web-app-network
+
+networks:
+  web-app-network:
+    external: true
+    driver: bridge
