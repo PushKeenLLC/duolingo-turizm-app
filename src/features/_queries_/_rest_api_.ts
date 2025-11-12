@@ -265,7 +265,7 @@ export const CreateUser = async (petName: string, userId: number, tgName: string
   }
 };
 
-let isPostingProgress = false;
+const inFlightProgressPosts = new Set<string>();
 
 export const putPoint = async (section_slug: string, point: number, userId: any) => {
   //check
@@ -275,12 +275,14 @@ export const putPoint = async (section_slug: string, point: number, userId: any)
     'point: ' + point,
     'userId: ' + userId,
   )
-  if (point === 1 && isPostingProgress) return; // блокируем повторный POST
-  //check
-  console.log('-putPoint 1. check (point === 1 && isPostingProgress)')
-  if (point === 1) isPostingProgress = true;
-  //check
-  console.log('-putPoint 2. check (point === 1)')
+  const key = `${userId}::${section_slug}::${point}`;
+  if (point === 1 && inFlightProgressPosts.has(key)) {
+    //check
+    console.log('-putPoint 2. guard: duplicate POST suppressed for', key);
+    return;
+  }
+  if (point === 1) inFlightProgressPosts.add(key);
+  console.log('-putPoint 3. guard set for key:', key)
   const data = {
     user_id: userId,
     section_slug: section_slug,
@@ -296,7 +298,7 @@ export const putPoint = async (section_slug: string, point: number, userId: any)
 
   try {
     //check
-    console.log('-putPoint 3. start response', 'METHOD: '+ METHOD)
+    console.log('-putPoint 4. start response', 'METHOD: '+ METHOD)
     const response = await fetch(BASE_URL + 'progress', {
       method: METHOD,
       headers: {
@@ -331,9 +333,18 @@ export const putPoint = async (section_slug: string, point: number, userId: any)
         const errorText2 = await response2.text();
         console.error('Ошибка при отправке данных (users):', errorText2);
       }
+      throw new Error('Progress update failed');
     }
   } catch (error) {
     console.error('Ошибка сети:', error);
+    throw error;
+  } finally {
+    // release guard for this key to allow future attempts
+    if (point === 1) {
+      const key = `${userId}::${section_slug}::${point}`;
+      inFlightProgressPosts.delete(key);
+      console.log('-putPoint 8. guard cleared for key:', key)
+    }
   }
 };
 

@@ -93,8 +93,8 @@ export default function App({ Component, pageProps }: AppProps) {
       const checkMobile = /Mobi|Android/i.test(navigator.userAgent);
 
       setDeviceState({
-        isMobile: checkMobile,
-        // isMobile: true,
+        // isMobile: checkMobile,
+        isMobile: true,
         isLandscape: width > height,
         isTelegram: !!window.Telegram,
       });
