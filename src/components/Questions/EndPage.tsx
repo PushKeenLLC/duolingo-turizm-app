@@ -86,12 +86,16 @@ const EndPage = ({QuizFunc}: EndPageProps) => {
               data-aos="fade-down"
               data-aos-duration='300'
               data-aos-delay='300'
-            >Поздравляем!</Title>
+            >
+              Поздравляем!
+            </Title>
             <Level
               data-aos="fade-down"
               data-aos-duration='300'
               data-aos-delay='300'
-            >уровень 1</Level>
+            >
+              уровень {point_id}
+            </Level>
           </div>
 
           <ImageCon>
