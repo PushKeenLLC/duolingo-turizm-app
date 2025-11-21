@@ -1,15 +1,15 @@
-import {COLORS} from '@/styles/variables';
-import React, {useEffect, useState} from 'react';
-import {styled, keyframes} from 'styled-components';
-import {CustomBtn} from '../Shared/CustomBtn';
-import {Btn1, Btn2, Btn2Style, Btn3} from '@/styles/textTags';
+import { COLORS } from '@/styles/variables';
+import React, { useEffect, useState } from 'react';
+import { styled, keyframes } from 'styled-components';
+import { CustomBtn } from '../Shared/CustomBtn';
+import { Btn1, Btn2, Btn2Style, Btn3 } from '@/styles/textTags';
 import QuestionsSvgSelector from './QuestionsSvgSelector';
 import Image from 'next/image';
 import frogImg from '@/assets/img/frog.png';
-import {useRouter} from 'next/router';
+import { useRouter } from 'next/router';
 import SvgSelector from '../Shared/SvgSelector';
 import Loader from '../Shared/Loader';
-import {addCompletedCourseSlug} from '@/features/localStorage';
+import { addCompletedCourseSlug } from '@/features/localStorage';
 import CrownSvgSelector from './CrownSvgSelector';
 
 interface EndPageProps {
@@ -17,7 +17,7 @@ interface EndPageProps {
   QuizFunc: any;
 }
 
-const EndPage = ({QuizFunc}: EndPageProps) => {
+const EndPage = ({ QuizFunc }: EndPageProps) => {
   const router = useRouter();
   const point_id = router.query.point_id;
   const section_slug = router.query.section_id;
@@ -26,141 +26,88 @@ const EndPage = ({QuizFunc}: EndPageProps) => {
   const [achievement, setAchievement] = useState<boolean | null>(null);
 
   useEffect(() => {
-    //check
-    console.log('1. useEffect in end page')
-
     if (!point_id || !section_slug || !course_slug) return;
 
-    //check
-    console.log(
-      '2. end page after check:',
-      'point_id: ' + point_id,
-      'section_slug: ' + section_slug,
-      'course_slug: ' + course_slug,
-    )
-
     const fetchData = async () => {
-      //check
-      console.log('3. fetchData')
-
       const data = await QuizFunc.gameOver(section_slug, Number(point_id));
 
-      //check
-      console.log('3. fun QuizFunc.gameOver() was end')
-
       if (data?.is_completed_course) {
-        //check
-        console.log('4.1. if data?.is_completed_course:' + data?.is_completed_course)
         setAchievement(true);
         addCompletedCourseSlug(String(course_slug));
       } else {
-        //check
-        console.log('4.2. if data?.is_completed_course:' + data?.is_completed_course)
         setAchievement(false);
       }
     };
 
     fetchData();
-
-    //check
-    console.log('5. end func fetchData()')
   }, [point_id, section_slug, course_slug]);
 
   if (achievement === null) {
-    return <Loader/>;
+    return <Loader />;
   }
 
   return (
-    <EndPageWr
-    >
+    <EndPageWr>
       <button onClick={() => router.push(`/courses/${course_slug}/${section_slug}`)}>
-        <SvgSelector svg='close-btn'/>
+        <SvgSelector svg='close-btn' />
       </button>
-      <EndPageContentBlock
-        data-aos="zoom-in-up"
-        data-aos-duration='300'
-      >
+      <EndPageContentBlock data-aos='zoom-in-up' data-aos-duration='300'>
         <CrownBlock>
           <div>
-            <Title
-              data-aos="fade-down"
-              data-aos-duration='300'
-              data-aos-delay='300'
-            >
+            <Title data-aos='fade-down' data-aos-duration='300' data-aos-delay='300'>
               Поздравляем!
             </Title>
-            <Level
-              data-aos="fade-down"
-              data-aos-duration='300'
-              data-aos-delay='300'
-            >
+            <Level data-aos='fade-down' data-aos-duration='300' data-aos-delay='300'>
               уровень {point_id}
             </Level>
           </div>
 
           <ImageCon>
-            <CrownSvgSelector svg="base"
-                              data-aos="zoom-in-up"
-                              data-aos-duration='300'
-            />
+            <CrownSvgSelector svg='base' data-aos='zoom-in-up' data-aos-duration='300' />
             <StarsCon>
-              <div
-                data-aos="zoom-in"
-                data-aos-duration='300'
-                data-aos-delay='300'
-              >
-                <CrownSvgSelector svg="left-star"/>
+              <div data-aos='zoom-in' data-aos-duration='300' data-aos-delay='300'>
+                <CrownSvgSelector svg='left-star' />
               </div>
-              <div
-                data-aos="zoom-in"
-                data-aos-duration='300'
-                data-aos-delay='400'>
-                <CrownSvgSelector svg="center-star"/>
+              <div data-aos='zoom-in' data-aos-duration='300' data-aos-delay='400'>
+                <CrownSvgSelector svg='center-star' />
               </div>
-              <div
-                data-aos="zoom-in"
-                data-aos-duration='300'
-                data-aos-delay='500'>
-                <CrownSvgSelector svg="right-star"/>
+              <div data-aos='zoom-in' data-aos-duration='300' data-aos-delay='500'>
+                <CrownSvgSelector svg='right-star' />
               </div>
             </StarsCon>
-            <CrownSvgSelector svg="shining"/>
+            <CrownSvgSelector svg='shining' />
           </ImageCon>
         </CrownBlock>
         <ExpBlock>
-          <Btn2
-            data-aos="zoom-in"
-            data-aos-duration='300'
-            data-aos-delay='500'
-          >Награда</Btn2>
-          <PointRollBlock
-            data-aos="zoom-in"
-            data-aos-duration='300'
-            data-aos-delay='500'>
-            <QuestionsSvgSelector
-              name={achievement ? 'stciker' : 'exp'}/>
+          <Btn2 data-aos='zoom-in' data-aos-duration='300' data-aos-delay='500'>
+            Награда
+          </Btn2>
+          <PointRollBlock data-aos='zoom-in' data-aos-duration='300' data-aos-delay='500'>
+            <QuestionsSvgSelector name={achievement ? 'stciker' : 'exp'} />
             <span>{achievement ? '+1' : '+70'}</span>
           </PointRollBlock>
         </ExpBlock>
         <CustomBtn
-          data-aos="fade-up"
+          data-aos='fade-up'
           data-aos-duration='300'
           data-aos-delay='500'
-          onClick={() => router.push(`/courses/${course_slug}/${section_slug}`)}>
+          onClick={() => router.push(`/courses/${course_slug}/${section_slug}`)}
+        >
           Продолжить
         </CustomBtn>
         {achievement && (
-          <CustomBtn orange onClick={() => router.push('/achievements')}
-                     data-aos="fade-up"
-                     data-aos-duration='300'
-                     data-aos-delay='600'
+          <CustomBtn
+            orange
+            onClick={() => router.push('/achievements')}
+            data-aos='fade-up'
+            data-aos-duration='300'
+            data-aos-delay='600'
           >
             Мой{'\u00A0'}чемодан
           </CustomBtn>
         )}
       </EndPageContentBlock>
-      {!achievement && <MascotImg
-        src={frogImg.src} alt='Квакс' width={310} height={289}/>}
+      {!achievement && <MascotImg src={frogImg.src} alt='Квакс' width={310} height={289} />}
     </EndPageWr>
   );
 };
@@ -221,7 +168,6 @@ const StarsCon = styled.div`
       height: 100%;
     }
   }
-
 `;
 
 const EndPageWr = styled.div`
@@ -274,7 +220,6 @@ const CrownBlock = styled.div`
   transform: translate(-50%, 0%);
   top: -10%;
   left: 50%;
-
 `;
 
 const Title = styled(Btn1)`
